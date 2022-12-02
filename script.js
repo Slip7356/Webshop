@@ -257,16 +257,16 @@ function renderProducts() {
     // console.log(state.products);
     // state.event = "read";
     fetch(state.url)
-    .then((response) => response.json())
-    .then((data) => {
-        
-        console.log("data",data);
-        state.product = data;
-        console.log(state.products);
-        state.event = "read"
-        let prodctsHtml = "";
-        state.products.forEach(product => {
-            prodctsHtml += `
+        .then((response) => response.json())
+        .then((data) => {
+
+            console.log("data", data);
+            state.product = data;
+            console.log(state.products);
+            state.event = "read"
+            let prodctsHtml = "";
+            state.products.forEach(product => {
+                prodctsHtml += `
             <div class="col">
                 <div class="card ${product.quantity > 0 ? "" : "bg-warning"}">
                     <div class="card-body">
@@ -316,17 +316,18 @@ function renderProducts() {
                     </div>
                 </div>
             </div>`;
-    
-        });
-        document.getElementById("product-list").innerHTML = prodctsHtml;
 
-    })
-    .catch(() => {
-        console.log("szerver hiba");
-        document.getElementById("product-list".innerHTML = "<h2>szerver hiba</h2>")
-    }
-    
-)}
+            });
+            document.getElementById("product-list").innerHTML = prodctsHtml;
+
+        })
+        .catch(() => {
+            console.log("szerver hiba");
+            document.getElementById("product-list".innerHTML = "<h2>szerver hiba</h2>")
+        }
+
+        )
+}
 
 
 function quantityInputCheck(id) {
@@ -389,9 +390,6 @@ function intoCart(id) {
     console.log(state.cart);
 
 }
-
-
-
 //Update: Módosít gomb függvénye
 function updateProduct(id) {
     state.event = "update"
@@ -412,13 +410,19 @@ function updateProduct(id) {
     formView();
     console.log(id);
 }
-
 //Delete: Töröl gomb függvénye
 function deleteProduct(id) {
     state.event = "delete";
-    let index = searchIndex(id)
-    state.products.splice(index, 1);
-    renderProducts()
+    //let index = searchIndex(id)
+    //state.products.splice(index, 1);
+    let urlDelete = `${state.url}/${id}`
+    fetch(urlDelete, { method: 'DELETE' })
+    .then(() => {
+    
+    renderProducts();
+}) 
+.catch((error)=>
+console.log(error))
 }
 
 //Amikor betöltődött az oldal, elindul a: renderProducts függvény
