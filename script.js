@@ -4,23 +4,26 @@ let mode = "read";
 let currentID = null;
 let order = false;
 let cart = [];
+    
 
-function formView() {
+//#region Segéd függvények
+//Űrlap megjelenítése
+function formView(){
     document.getElementById("form").classList.remove("d-none")
 }
 
 //űrlap elrejtése
-function formHide() {
+function formHide(){
     document.getElementById("form").classList.add("d-none")
 }
 
 //Id generátor
-function idGen() {
+function idGen(){
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
 //id alapján megkeresi az index-et: id -> index
-function searchIndex(id) {
+function searchIndex(id){
     for (let index = 0; index < products.length; index++) {
         if (id === products[index].id) {
             return index;
@@ -30,20 +33,20 @@ function searchIndex(id) {
 //#endregion 
 
 //Mégse gomb működtetése
-document.getElementById("cancel-product").onclick = function() {
+document.getElementById("cancel-product").onclick=function(){
     mode = "read";
     formHide();
 };
 
 //Create: Új áru gomb
-document.getElementById("new-product").onclick = function(id) {
+document.getElementById("new-product").onclick = function(id){
     document.getElementById("formHead").innerHTML = "Új áru bevitele"
     mode = "create";
     formView();
 };
 
 //Save: Mentés gomb
-document.getElementById("save-product").onclick = function(event) {
+document.getElementById("save-product").onclick = function(event){
     event.preventDefault();
     event = "create";
 
@@ -56,13 +59,13 @@ document.getElementById("save-product").onclick = function(event) {
             type: document.getElementById("type").value
         }
         fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(product)
-            })
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(product)
+        })
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
@@ -77,58 +80,58 @@ document.getElementById("save-product").onclick = function(event) {
             price: document.getElementById("price").value,
             type: document.getElementById("type").value
         };
-
+        
         let urlUpdate = `${url}/${currentID}`
         fetch(urlUpdate, {
-                method: 'PUT',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(product)
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-                renderProducts();
-            });
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(product)
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
+            renderProducts();
+        });
     }
-
+    
     let errorList = [];
-    if (!(products.name)) {
+    if (! (products.name)){
         console.log("namehiba");
         document.getElementById("name-label").classList.add("text-danger");
         errorList.push("Name hiba");
-    } else {
+    }else{
         document.getElementById("name-label").classList.remove("text-danger");
     }
-    if (!(price)) {
+    if (! (price)){
         console.log("namehiba");
         document.getElementById("price-label").classList.add("text-danger");
         errorList.push("Price hiba");
-    } else {
+    }else{
         document.getElementById("price-label").classList.remove("text-danger");
     }
-    if (!(type)) {
+    if (! (type)){
         console.log("typehiba");
         document.getElementById("type-label").classList.add("text-danger");
         errorList.push("Type hiba");
-    } else {
+    }else{
         document.getElementById("type-label").classList.remove("text-danger");
     }
-    if (!(quantity)) {
+    if (! (quantity)){
         console.log("quantityHiba");
         document.getElementById("quantity-label").classList.add("text-danger");
         errorList.push("Quantity hiba");
-    } else {
+    }else{
         document.getElementById("quantity-label").classList.remove("text-danger");
     }
 
-    if (errorList.length > 0) {
+    if (errorList.length >0) {
         return;
     }
 
-
+   
     formHide()
 
     //mezők ürítése
@@ -139,7 +142,7 @@ document.getElementById("save-product").onclick = function(event) {
 }
 
 //Kosár megmutatása
-function cartRender() {
+function cartRender(){
     //kosár ablak megjelenítése
     cardBoxView();
 
@@ -159,7 +162,7 @@ function cartRender() {
             </button>
         </li>
         `;
-        total += product.price * product.quantity;
+        total += product.price*product.quantity;
     }
 
     //lista berkása az ul-be
@@ -169,20 +172,20 @@ function cartRender() {
 }
 
 //kosár áru mennyiség kiszámolása, és beírása
-function renderCartCount() {
+function renderCartCount(){
     //mennyi áru van a kosárban?
     let count = cart.length;
     //Írd ki ezt az értéket a "cart-count"-ba
-    document.getElementById("cart-count").innerHTML = count;
+    document.getElementById("cart-count").innerHTML=count;
 }
 
 //Törlés a kosárból
 //issue: Törlés a kosárból
-function deleteFromCart(id) {
+function deleteFromCart(id){
     //megkeressük a cart-ban az idexet ami az id-hez tartozik
     let index = seachIndexByIdInCart(id);
     //kiszedjük a kosárból az index-hez tartozó árut
-
+    
     //darabszám korrekció
     //1. megkesem a darabszámot
     let quantity = cart[index].quantity;
@@ -190,15 +193,15 @@ function deleteFromCart(id) {
     let indexPducts = searchIndex(id);
     //3. korrigálom a darbszámát
     products[indexPducts].quantity += quantity;
-
-    cart.splice(index, 1);
+    
+    cart.splice(index,1);
     //render: kosár, kártyák
     cartRender();
     renderProducts();
 }
 
 //megkeressük a cart-ban az idexet ami az id-hez tartozik
-function seachIndexByIdInCart(id) {
+function seachIndexByIdInCart(id){
     let indexReturn = -1;
     for (let index = 0; index < cart.length; index++) {
         if (cart[index].id == id) {
@@ -212,32 +215,33 @@ function seachIndexByIdInCart(id) {
 
 //A fizetés folymata
 //issue: ki kell doglozni a fizetés folymatát
-function payRender() {
+function payRender(){
     console.log("payRender()");
     cartBoxHide();
 }
 
 //Tovább vásárolok
-function continueBy() {
+function continueBy(){
     console.log("continueBy()");
     cartBoxHide();
 }
 
 //Kosár eltüntetése
-function cartBoxHide() {
+function cartBoxHide(){
     document.getElementById("cart-box").classList.add("d-none");
 }
 
 //kosár megjelenítése
-function cardBoxView() {
+function cardBoxView(){
     document.getElementById("cart-box").classList.remove("d-none");
 
 }
 
 
+    
 
-
-function renderProducts() {
+//Read: product lista
+function renderProducts(){
 
     mode = "read";
     fetch(url)
@@ -248,7 +252,7 @@ function renderProducts() {
             console.log("Adatok a szervertől", data)
             products = data
             console.log("products", products);
-            viewProducts(data);
+            viewProducts(data);     
         })
         .catch((error) => {
             console.log(error)
@@ -259,9 +263,9 @@ function renderProducts() {
 
 }
 
-function viewProducts(products) {
-
-
+function viewProducts(products){
+    
+        
     let prodctsHtml = "";
     products.forEach(product => {
         prodctsHtml += `
@@ -315,12 +319,12 @@ function viewProducts(products) {
             </div>
         </div>
     </div>`;
-
-    });
-    document.getElementById("product-list").innerHTML = prodctsHtml;
+    
+});
+document.getElementById("product-list").innerHTML = prodctsHtml;
 }
 
-function quantityInputCheck(id) {
+function quantityInputCheck(id){
     //kiszedjük mi van beleírva
     let quantity = +document.getElementById(id).value;
     console.log("check", id, quantity);
@@ -331,16 +335,17 @@ function quantityInputCheck(id) {
     //vizsgálódás, ha többet, vagy negatívot írtunk, akkor korrigálunk
     if (quantity < 0) {
         document.getElementById(id).value = 1;
-    } else if (quantity > quantityProduct) {
+    } else if(quantity > quantityProduct) {
         document.getElementById(id).value = quantityProduct;
     }
 }
 
-
-function intoCart(id) {
+//Kosár
+//issue: nem kell az isInsStock: bevitel, és egyéb helyeken
+function intoCart(id){
     //Derítsük ki az indexet
     let index = searchIndex(id);
-
+    
     let quantity = +document.getElementById(`${id}`).value
 
     //Mennyiség korrektció:
@@ -348,7 +353,7 @@ function intoCart(id) {
     products[index].quantity = products[index].quantity - quantity;
 
 
-    let product = {...products[index] }
+    let product = {...products[index]}
     product.quantity = quantity;
 
 
@@ -361,7 +366,10 @@ function intoCart(id) {
     } else {
         cart[indexCart].quantity += quantity;
     }
+    //a kosárba ezzel amennyiséggel kell berakni
 
+
+    //újrarendereljük a termékeket
     renderProducts();
     renderCartCount()
 
@@ -370,7 +378,9 @@ function intoCart(id) {
 
 }
 
-function updateProduct(id) {
+
+
+function updateProduct(id){
     document.getElementById("formHead").innerHTML = "Áru módosítása"
     mode = "update";
     let urlUpdate = `${url}/${id}`
@@ -386,11 +396,11 @@ function updateProduct(id) {
     formView()
 }
 
-function deleteProduct(id) {
+function deleteProduct(id){
     let urlDelete = `${url}/${id}`
     fetch(urlDelete, {
-            method: 'DELETE'
-        })
+        method: 'DELETE'
+    })
         .then((response) => response.json())
         .then((data) => {
             console.log(data)
@@ -398,5 +408,6 @@ function deleteProduct(id) {
         })
         .catch((error) => console.log(error))
 }
+
 
 window.onload = renderProducts;
