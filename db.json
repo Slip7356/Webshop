@@ -1,32 +1,18 @@
 {
   "products": [
     {
-      "id": "lb697mkdvhdgwxppj3",
-      "name": "Áru 1",
-      "price": 1500,
-      "quantity": 97,
-      "type": "tejtermék"
+      "id": 3,
+      "name": "aru 3",
+      "quantity": 70,
+      "price": 2700,
+      "type": "tesztafele"
     },
     {
-      "id": "lb697mkd1ik1gidh4dg",
-      "name": "Áru 2",
-      "price": 2500,
-      "quantity": 15,
-      "type": "tejtermék"
-    },
-    {
-      "id": "lb697mkd09cou50yng22",
-      "name": "Áru 3",
-      "price": 3500,
-      "quantity": 25,
-      "type": "sajtok"
-    },
-    {
-      "id": "lb697mkdmfa0xrger1",
-      "name": "Áru 4",
-      "price": 4500,
-      "quantity": 10,
-      "type": "sajtok"
+      "id": "lb6ex1hkcu2inp108nh",
+      "name": "aru 47",
+      "quantity": "41",
+      "price": "4000",
+      "type": "udito"
     }
   ]
 }
